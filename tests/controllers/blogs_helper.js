@@ -1,10 +1,5 @@
 const Blog = require("../../models/blog");
 
-const blogsInDb = async () => {
-  const blogs = await Blog.find({});
-  return blogs.map((blog) => blog.toJSON());
-};
-
 const initialBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -75,6 +70,11 @@ const newBlogWithoutLikes = {
 const newBlogWithoutTitleAndUrl = {
   author: "Fabian",
   likes: 1,
+};
+
+const blogsInDb = async () => {
+  const blogs = await Blog.find({});
+  return blogs.map((blog) => blog.toJSON());
 };
 
 module.exports = {

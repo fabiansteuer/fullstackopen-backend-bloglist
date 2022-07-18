@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
-const Blog = require("../../models/blog");
-const helper = require("./blogs_helper");
 const app = require("../../app");
 
 const api = supertest(app);
+
+const Blog = require("../../models/blog");
+const helper = require("./blogs_helper");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -71,19 +72,30 @@ test("creating a blog without title and url returns a 400 error", async () => {
     .expect(400);
 });
 
-// test("deleting a blog works", async () => {
-//   const blogs = helper.blogsInDb();
-//   const blogToBeDeleted = blogs.shift();
+test("deleting a blog works", async () => {
+  const blogs = await helper.blogsInDb();
+  const blogToBeDeleted = blogs.shift();
 
-//   const response = await api.delete(`/api/blogs/${blogToBeDeleted.id}`);
+  await api.delete(`/api/blogs/${blogToBeDeleted.id}`).expect(204);
 
-//   const remainingBlogs = helper.blogsInDb();
+  const remainingBlogs = await helper.blogsInDb();
+  expect(remainingBlogs).not.toContainEqual(blogToBeDeleted);
+});
 
-//   console.log(response.body);
-//   console.log(remainingBlogs);
+test("updating a blog works", async () => {
+  const blogs = await helper.blogsInDb();
+  const blogToBeUpdated = blogs[0];
 
-//   response.expect(204);
-// });
+  const updatedBlog = { ...blogToBeUpdated, likes: blogToBeUpdated.likes + 1 };
+
+  await api
+    .put(`/api/blogs/${blogToBeUpdated.id}`)
+    .send(updatedBlog)
+    .expect(200);
+
+  const updatedBlogs = await helper.blogsInDb();
+  expect(updatedBlogs).toContainEqual(updatedBlog);
+});
 
 afterAll(() => {
   mongoose.connection.close();
