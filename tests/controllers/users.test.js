@@ -48,7 +48,23 @@ describe("/users", () => {
       .post("/api/users")
       .send(helper.newUserWithoutUsername)
       .expect(400);
+
+    const finalUsers = await helper.usersInDb();
+    expect(initialUsers.length === finalUsers.length);
   });
+
+  test("creating a new user with too short a username fails", async () => {
+    const initialUsers = await helper.usersInDb();
+
+    await api
+      .post("/api/users")
+      .send(helper.newUserWithShortUsername)
+      .expect(400);
+
+    const finalUsers = await helper.usersInDb();
+    expect(initialUsers.length === finalUsers.length);
+  });
+
   test("creating a new user without password fails", async () => {
     const initialUsers = await helper.usersInDb();
 
@@ -56,6 +72,21 @@ describe("/users", () => {
       .post("/api/users")
       .send(helper.newUserWithoutPassword)
       .expect(400);
+
+    const finalUsers = await helper.usersInDb();
+    expect(initialUsers.length === finalUsers.length);
+  });
+
+  test("creating a new user with too short a password fails", async () => {
+    const initialUsers = await helper.usersInDb();
+
+    await api
+      .post("/api/users")
+      .send(helper.newUserWithShortPassword)
+      .expect(400);
+
+    const finalUsers = await helper.usersInDb();
+    expect(initialUsers.length === finalUsers.length);
   });
 
   afterAll(() => {

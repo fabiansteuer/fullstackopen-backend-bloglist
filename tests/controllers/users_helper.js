@@ -41,9 +41,21 @@ const newUserWithoutUsername = {
   password: "password",
 };
 
+const newUserWithShortUsername = {
+  name: "Newbian",
+  username: "ne",
+  password: "password",
+};
+
 const newUserWithoutPassword = {
   name: "Newbian",
   username: "newbian",
+};
+
+const newUserWithShortPassword = {
+  name: "Newbian",
+  username: "newbian",
+  password: "pa",
 };
 
 const usersInDb = async () => {
@@ -56,5 +68,7 @@ module.exports = {
   initialUsers,
   newUser,
   newUserWithoutUsername,
+  newUserWithShortUsername,
   newUserWithoutPassword,
+  newUserWithShortPassword,
 };
