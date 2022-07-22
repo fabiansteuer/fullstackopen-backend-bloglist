@@ -14,6 +14,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "JsonWebTokenError") {
     return response.status(401).send({ error: "Token missing or invalid" });
+  } else if (error.name === "SyntaxError") {
+    return response.status(401).send({ error: "Token missing or invalid" });
   } else if (error.name === "TokenExpiredError") {
     return response.status(401).send({ error: "Token expired" });
   } else if (error.name === "CastError") {
@@ -27,8 +29,20 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get("authorization");
+
+  request.token = null;
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    request.token = authorization.substring(7);
+  }
+
+  next();
+};
+
 module.exports = {
   requestLogger,
+  tokenExtractor,
   unknownEndpoint,
   errorHandler,
 };
