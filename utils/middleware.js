@@ -3,7 +3,7 @@ const user = require("../models/user");
 const logger = require("./logger");
 
 const requestLogger = (request, response, next) => {
-  logger.info(request.method, request.path, request.body);
+  logger.info(request.method, request.path, request.body, request.headers);
   next();
 };
 
@@ -38,9 +38,7 @@ const userExtractor = (request, response, next) => {
 
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
     const token = authorization.substring(7);
-    console.log("token", token);
     const decodedToken = jwt.verify(token, process.env.SECRET);
-    console.log("decodedtoken", decodedToken);
     if (decodedToken.id) {
       request.user = decodedToken.id;
     }
