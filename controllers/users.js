@@ -1,7 +1,7 @@
 const logger = require("../utils/logger");
 const usersRouter = require("express").Router();
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
+const hashPassword = require("../utils/password");
 
 usersRouter.get("/", async (request, response) => {
   const users = await User.find({}).populate("blogs", {
@@ -26,8 +26,7 @@ usersRouter.post("/", async (request, response) => {
     return response.status(400).send({ error: "Password too short" });
   }
 
-  const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(password, saltRounds);
+  const passwordHash = await hashPassword(password);
 
   const user = new User({
     name,
