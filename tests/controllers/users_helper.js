@@ -1,33 +1,36 @@
 const User = require("../../models/user");
+const supertest = require("supertest");
+const app = require("../../app");
+
+const api = supertest(app);
 
 const initialUsers = [
+  // {
+  //   _id: "5a422a851b54a676234d17f7",
+  //   name: "Fabian",
+  //   username: "fabian",
+  //   passwordHash:
+  //     "$2b$10$c7FZialRc/4zc9Rbm3A3Z.dMaX6dlxnBXrlWyOdJL4RcNBkRWtVzm",
+  //   __v: 0,
+  // },
   {
-    _id: "5a422a851b54a676234d17f7",
+    _id: "4a422a851b54a676234d17f7",
     name: "Fabian",
     username: "fabian",
     passwordHash:
-      "$2b$10$c7FZialRc/4zc9Rbm3A3Z.dMaX6dlxnBXrlWyOdJL4RcNBkRWtVzm",
+      "$2b$10$2JEFQM/R6Vj5BtO5OB/XOezryUU3BX0pvIST.Ccl7yxXxOkHEd7Am",
+    blogs: [],
     __v: 0,
   },
-  // {
-  //   _id: "5a422aa71b54a676234d17f8",
-  //   __v: 0,
-  // },
-  // {
-  //   _id: "5a422b3a1b54a676234d17f9",
-  //   __v: 0,
-  // },
-  // {
-  //   _id: "5a422b891b54a676234d17fa",
-  //   __v: 0,
-  // },
-  // {
-  //   _id: "5a422ba71b54a676234d17fb",
-  //   __v: 0,
-  // },
-  // {
-  //   _id: "5a422bc61b54a676234d17fc",
-  // },
+  {
+    _id: "4a422a851b54a676234d17f8",
+    name: "Naibaf",
+    username: "naibaf",
+    passwordHash:
+      "$2b$10$2JEFQM/R6Vj5BtO5OB/XOezryUU3BX0pvIST.Ccl7yxXxOkHEd7Am",
+    blogs: [],
+    __v: 0,
+  },
 ];
 
 const newUser = {
@@ -63,6 +66,14 @@ const usersInDb = async () => {
   return users.map((user) => user.toJSON());
 };
 
+const getTokenFor = async (user) => {
+  const response = await api
+    .post("/api/login")
+    .send({ username: user.username, password: "password" });
+
+  return response.body.token;
+};
+
 module.exports = {
   usersInDb,
   initialUsers,
@@ -71,4 +82,5 @@ module.exports = {
   newUserWithShortUsername,
   newUserWithoutPassword,
   newUserWithShortPassword,
+  getTokenFor,
 };
