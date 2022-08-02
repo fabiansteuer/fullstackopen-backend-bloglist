@@ -103,6 +103,10 @@ test("creating a blog without title and url returns a 400 error", async () => {
     .expect(400);
 });
 
+test("creating a blog without token returns a 401 error", async () => {
+  await api.post("/api/blogs").send(blogsHelper.newBlog).expect(401);
+});
+
 test("deleting a blog works", async () => {
   const blogs = await blogsHelper.blogsInDb();
   const blogToBeDeleted = blogs.shift();
